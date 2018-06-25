@@ -1,29 +1,25 @@
-db1:
-  image: mysql:latest
-  container_name: db1
-  volumes:
-    - C:/Users/henrique/Desktop/microservices/database/db1:/var/lib/mysql
-  environment:
-    - MYSQL_ROOT_PASSWORD=root
-  ports:
-    - 3306:3306
-micsrv1:
-  image: henriqueweiand/micsrv:1.1
-  container_name: micsrv1
-  restart: always
-  volumes:
-    - C:/Users/henrique/Desktop/microservices/service1:/var/www/html
-  links:
-    - db1:db1
-  ports:
-    - 80:80
-app1:
-  image: henriqueweiand/micsrv:1.1
-  container_name: app1
-  restart: always
-  volumes:
-    - C:/Users/henrique/Desktop/microservices/app1:/var/www/html
-  links:
-    - db1:db1
-  ports:
-    - 80:80
+version: "3"
+services:
+  db1:
+    image: mysql:5.7
+    container_name: db1
+    restart: always
+    volumes:
+      - /Users/henriqueweiand/Desktop/docker/ms-seguranca/database/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+    ports:
+      - 3306:3306
+      
+  seguranca:
+    image: henriqueweiand/micsrv:1.8
+    container_name: seguranca
+    restart: always
+    volumes:
+      - /Users/henriqueweiand/Desktop/docker/ms-seguranca/www:/var/www/html
+    links:
+      - db1:db1
+    ports:
+      - 81:80
+    depends_on:
+      - "db1"

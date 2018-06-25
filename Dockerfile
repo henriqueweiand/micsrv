@@ -1,8 +1,13 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER Henrique Weiand <henriqueweiand@gmail.com>
 
+RUN apt-get update && apt-get upgrade -y
+
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN apt-get update && apt-get install -y apache2 git npm
-RUN apt-get install -y php7.0 libapache2-mod-php7.0 php7.0-mbstring php7.0-zip php7.0-xml php7.0-mysql mysql-client php7.0-pgsql zip unzip nano curl php7.0-curl php-pear wget
+RUN apt-get install -y php7.2 libapache2-mod-php7.2 php7.2-mbstring php7.2-zip php7.2-xml php7.2-mysql mysql-client php7.2-pgsql zip unzip nano curl php7.2-curl php-pear wget
 RUN a2enmod rewrite
 
 ENV COMPOSER_HOME /composer
@@ -16,7 +21,6 @@ RUN mkdir -p /var/www/html/public
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
-RUN php composer.phar --install-dir=bin --filename=composer
 RUN mv composer.phar /usr/local/bin/composer
 
 EXPOSE 80
